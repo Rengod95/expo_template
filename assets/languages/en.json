@@ -1,0 +1,35 @@
+{
+  "common": {
+    "welcome": "Welcome",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "profile": "Profile",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Successfully processed"
+  },
+  "auth": {
+    "loginSuccess": "Login successful",
+    "loginFailed": "Login failed",
+    "registerSuccess": "Registration successful",
+    "registerFailed": "Registration failed",
+    "logoutSuccess": "Logout successful",
+    "invalidCredentials": "Invalid email or password",
+    "networkError": "Network error occurred. Please try again",
+    "unauthorized": "Unauthorized user"
+  },
+  "home": {
+    "title": "Home",
+    "description": "Welcome to DeskTerior"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "common": {
+    "welcome": "환영합니다",
+    "login": "로그인",
+    "logout": "로그아웃",
+    "register": "회원가입",
+    "profile": "프로필",
+    "name": "이름",
+    "email": "이메일",
+    "password": "비밀번호",
+    "confirmPassword": "비밀번호 확인",
+    "submit": "제출",
+    "cancel": "취소",
+    "save": "저장",
+    "delete": "삭제",
+    "edit": "수정",
+    "loading": "로딩 중...",
+    "error": "오류가 발생했습니다",
+    "success": "성공적으로 처리되었습니다"
+  },
+  "auth": {
+    "loginSuccess": "로그인에 성공했습니다",
+    "loginFailed": "로그인에 실패했습니다",
+    "registerSuccess": "회원가입에 성공했습니다",
+    "registerFailed": "회원가입에 실패했습니다",
+    "logoutSuccess": "로그아웃에 성공했습니다",
+    "invalidCredentials": "이메일 또는 비밀번호가 올바르지 않습니다",
+    "networkError": "네트워크 오류가 발생했습니다. 다시 시도해주세요",
+    "unauthorized": "인증되지 않은 사용자입니다"
+  },
+  "home": {
+    "title": "홈",
+    "description": "DeskTerior에 오신 것을 환영합니다"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@app/*": ["./app/*"],
+      "@service/*": ["./service/*"],
+      "@application/*": ["./application/*"],
+      "@assets/*": ["./assets/*"],
+      "@view/*": ["./View/*"]
+    },
+    "typeRoots": ["./node_modules/@types", "./@types"],
+    "jsx": "react-native",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es2020"
+  },
+  "include": ["**/*.ts", "**/*.tsx", "./@types/**/*.d.ts"],
+  "exclude": ["node_modules"]
+}
