@@ -1,6 +1,7 @@
 ---
-description: 타입스크립트, 자바스크립트 기반 프로젝트 전반에 적용되는 룰
+description: 
 globs: 
+alwaysApply: true
 ---
 - **변수 및 함수:** 일반적으로 camelCase를 사용합니다. 예를 들어, 변수는 `userName`, 함수는 `getUserData`처럼 명명합니다.
 - **클래스 및 인터페이스:** PascalCase를 사용합니다. 클래스는 `UserService`, 인터페이스는 `UserInterface` 와 같이 작성합니다.

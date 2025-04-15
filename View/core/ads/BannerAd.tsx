@@ -1,10 +1,12 @@
+import {AdsService} from '@/service/lib/Ads/adapter';
+import {useBannerAd} from '@/service/lib/Ads/useBannerAd';
+import {usePaymentStore} from '@/service/lib/payment/store';
 /**
  * 배너 광고 컴포넌트
  */
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {BannerAd as RNBannerAd, BannerAdSize} from 'react-native-google-mobile-ads';
-import {AdsService} from '@/service/lib/Ads/adapter';
+import type React from 'react';
+import {BannerAdSize, BannerAd as RNBannerAd} from 'react-native-google-mobile-ads';
+import {XStack} from 'tamagui';
 
 interface BannerAdProps {
   size?: BannerAdSize;
@@ -15,27 +17,23 @@ interface BannerAdProps {
 /**
  * 배너 광고 컴포넌트
  */
-export const BannerAd: React.FC<BannerAdProps> = ({size = BannerAdSize.BANNER, onAdLoaded, onAdFailedToLoad}) => {
-  const [adUnitId, setAdUnitId] = useState<string | null>(null);
+export const BannerAd: React.FC<BannerAdProps> = ({size = BannerAdSize.ANCHORED_ADAPTIVE_BANNER, onAdLoaded, onAdFailedToLoad}) => {
+  const {hasUserActiveSubscription} = usePaymentStore();
 
-  useEffect(() => {
-    // 광고 서비스에서 배너 광고 ID 가져오기
-    const adsService = AdsService.getInstance();
-    const adUnitIds = adsService.getAdUnitIds();
-    setAdUnitId(adUnitIds.banner);
-  }, []);
+  const bannerRef = useBannerAd();
 
-  if (!adUnitId) {
+  if (hasUserActiveSubscription) {
     return null;
   }
 
   return (
-    <View style={styles.container}>
+    <XStack w={'100%'} justifyContent="center" my={'$8'}>
       <RNBannerAd
-        unitId={adUnitId}
+        ref={bannerRef}
+        unitId={AdsService.getBannerAdUnitId()}
         size={size}
         requestOptions={{
-          requestNonPersonalizedAdsOnly: true,
+          requestNonPersonalizedAdsOnly: false,
         }}
         onAdLoaded={onAdLoaded}
         onAdFailedToLoad={error => {
@@ -43,16 +41,8 @@ export const BannerAd: React.FC<BannerAdProps> = ({size = BannerAdSize.BANNER, o
           onAdFailedToLoad?.(error);
         }}
       />
-    </View>
+    </XStack>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-});
 
 export default BannerAd;

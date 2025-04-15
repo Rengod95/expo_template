@@ -27,24 +27,27 @@ interface EnvConfig {
   };
   bundleIdentifier: string;
   adMob: AdMobConfig;
+  googleServicesFile: string;
 }
 
 // 환경별 설정
 const ENV: Record<Environment, EnvConfig> = {
   development: {
     /** @change 앱 이름 수정 필요 */
-    appName: '[DEV] Temp Expo',
+    appName: '[DEV] Deskit',
     icon: './assets/icon.png',
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
     /** @change 번들 식별자 수정 필요 */
-    bundleIdentifier: 'com.inlee.templateReactNative.dev',
+    bundleIdentifier: 'com.inlee.expo.dev',
+    /** @change 파일 경로 수정 필요 */
+    googleServicesFile: './GoogleService-Info-Dev.plist',
     /** @change 광고 ID 수정 필요 */
     adMob: {
-      androidAppId: 'ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy',
-      iosAppId: 'ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy',
+      androidAppId: 'ca-app-pub-2037720801514821~1560566748',
+      iosAppId: 'ca-app-pub-2037720801514821~7798672033',
       banner: 'ca-app-pub-xxxxxxxxxxxxxxxx/dev-banner',
       interstitial: 'ca-app-pub-xxxxxxxxxxxxxxxx/dev-interstitial',
       rewarded: 'ca-app-pub-xxxxxxxxxxxxxxxx/dev-rewarded',
@@ -54,18 +57,20 @@ const ENV: Record<Environment, EnvConfig> = {
   },
   staging: {
     /** @change 앱 이름 수정 필요 */
-    appName: '[STG] Temp Expo',
+    appName: '[STG] Deskit',
     icon: './assets/icon.png',
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
     /** @change 번들 식별자 수정 필요 */
-    bundleIdentifier: 'com.inlee.templateReactNative.staging',
+    bundleIdentifier: 'com.inlee.expo.staging',
+    /** @change 파일 경로 수정 필요 */
+    googleServicesFile: './GoogleService-Info-Staging.plist',
     /** @change 광고 ID 수정 필요 */
     adMob: {
-      androidAppId: 'ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy',
-      iosAppId: 'ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy',
+      androidAppId: 'ca-app-pub-2037720801514821~1560566748',
+      iosAppId: 'ca-app-pub-2037720801514821~7798672033',
       banner: 'ca-app-pub-xxxxxxxxxxxxxxxx/stg-banner',
       interstitial: 'ca-app-pub-xxxxxxxxxxxxxxxx/stg-interstitial',
       rewarded: 'ca-app-pub-xxxxxxxxxxxxxxxx/stg-rewarded',
@@ -75,18 +80,20 @@ const ENV: Record<Environment, EnvConfig> = {
   },
   production: {
     /** @change 앱 이름 수정 필요 */
-    appName: 'Temp Expo',
+    appName: 'Deskit',
     icon: './assets/icon.png',
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
     /** @change 번들 식별자 수정 필요 */
-    bundleIdentifier: 'com.inlee.templateReactNative',
+    bundleIdentifier: 'com.inlee.expo',
+    /** @change 파일 경로 수정 필요 */
+    googleServicesFile: './GoogleService-Info.plist',
     /** @change 광고 ID 수정 필요 */
     adMob: {
-      androidAppId: 'ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy',
-      iosAppId: 'ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy',
+      androidAppId: 'ca-app-pub-2037720801514821~1560566748',
+      iosAppId: 'ca-app-pub-2037720801514821~7798672033',
       banner: 'ca-app-pub-xxxxxxxxxxxxxxxx/prod-banner',
       interstitial: 'ca-app-pub-xxxxxxxxxxxxxxxx/prod-interstitial',
       rewarded: 'ca-app-pub-xxxxxxxxxxxxxxxx/prod-rewarded',
@@ -180,6 +187,51 @@ const EXPO_ASSETS_PLUGIN: Plugin = [
   },
 ];
 
+const FIREBASE_APP_PLUGIN: Plugin = ['@react-native-firebase/app'];
+
+const FIREBASE_AUTH_PLUGIN: Plugin = ['@react-native-firebase/auth'];
+
+const FIREBASE_CRASHLYTICS_PLUGIN: Plugin = ['@react-native-firebase/crashlytics'];
+
+const BUILD_PROPERTIES_PLUGIN: Plugin = [
+  'expo-build-properties',
+  {
+    ios: {
+      useFrameworks: 'static',
+    },
+  },
+];
+
+const EXPO_CALENDAR_PLUGIN: Plugin = [
+  'expo-calendar',
+  {
+    calendarPermission: 'The app needs to access your calendar to sync your events',
+  },
+];
+
+const EXPO_IMAGE_PICKER_PLUGIN: Plugin = [
+  'expo-image-picker',
+  {
+    photosPermission: 'Allow App to access your photos.',
+  },
+];
+
+const EXPO_MEDIA_LIBRARY_PLUGIN: Plugin = [
+  'expo-media-library',
+  {
+    photosPermission: 'Allow App to access your photos.',
+    savePhotosPermission: 'Allow App to save photos.',
+    isAccessMediaLocationEnabled: true,
+  },
+];
+
+const EXPO_TRACKING_TRANSPARENCY_PLUGIN: Plugin = [
+  'expo-tracking-transparency',
+  {
+    userTrackingPermission: 'This identifier will be used to deliver personalized ads to you.',
+  },
+];
+
 export default ({config}: ConfigContext): ExpoConfig => {
   // 현재 환경 설정 (기본값: development)
   const appVariant = process.env.APP_VARIANT || 'development';
@@ -213,7 +265,20 @@ export default ({config}: ConfigContext): ExpoConfig => {
     web: {
       favicon: './assets/favicon.png',
     },
-    plugins: [EXPO_ROUTER_PLUGIN, getAdMobPlugin(environment), DEV_CLIENT_PLUGIN, EXPO_CAMERA_PLUGIN, EXPO_ASSETS_PLUGIN],
+    plugins: [
+      EXPO_ROUTER_PLUGIN,
+      getAdMobPlugin(environment),
+      DEV_CLIENT_PLUGIN,
+      EXPO_CAMERA_PLUGIN,
+      EXPO_ASSETS_PLUGIN,
+      FIREBASE_APP_PLUGIN,
+      FIREBASE_AUTH_PLUGIN,
+      FIREBASE_CRASHLYTICS_PLUGIN,
+      BUILD_PROPERTIES_PLUGIN,
+      EXPO_MEDIA_LIBRARY_PLUGIN,
+      EXPO_IMAGE_PICKER_PLUGIN,
+      EXPO_TRACKING_TRANSPARENCY_PLUGIN,
+    ],
     extra: {
       APP_VARIANT: environment,
       adMob: envConfig.adMob,

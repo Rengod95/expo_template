@@ -1,0 +1,92 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: Zustand 스토어 작성 규칙
+globs:
+  - "**/store.ts"
+---
+
+# Zustand Store 작성 규칙
+
+Zustand를 사용하여 상태 관리를 수행하며, 다음과 같은 규칙을 따릅니다.
+
+1.  **파일 위치**:
+    *   스토어 로직은 해당 기능과 관련된 `service/lib/[도메인]/store.ts` 파일에 작성하는 것을 원칙으로 합니다.
+
+2.  **스토어 생성**:
+    *   **영속성 필요 시**: 앱 재시작 시에도 유지되어야 하는 상태 (예: 사용자 설정, 인증 정보)는 `service/lib/Store/adapter.ts`의 `StoreService.createPersistentStore`를 사용하여 생성합니다.
+        *   고유한 `name` (Storage Key)을 첫 번째 인자로 전달합니다. 이 키는 `service/lib/[도메인]/consts.ts`에 정의하고 가져와 사용합니다.
+        *   두 번째 인자로 Zustand 상태 초기화 함수를 전달합니다.
+        *   자동으로 AsyncStorage 저장 및 하이드레이션 관리가 이루어집니다.
+    *   **영속성 불필요 시**: 앱 세션 동안만 유지되는 임시 상태 (예: 로딩 상태, 특정 UI 상태)는 `zustand/vanilla`의 `createStore`를 직접 사용하여 생성합니다.
+        *   필요에 따라 `devtools`, `immer` 등의 미들웨어를 함께 사용할 수 있습니다.
+
+3.  **타입 정의**:
+    *   TypeScript를 사용하여 상태(State)와 액션(Actions) 타입을 명확하게 분리하여 정의합니다. (예: `MyStoreState`, `MyStoreActions`)
+    *   `createPersistentStore` 또는 `createStore` 호출 시 제네릭 타입으로 `MyStoreState & MyStoreActions`와 같이 결합하여 사용합니다.
+
+4.  **초기 상태**:
+    *   스토어 상태의 기본값을 포함하는 `initialState` 객체를 정의합니다.
+
+5.  **초기화 함수**:
+    *   `createPersistentStore` 또는 `createStore`에 전달되는 함수는 `set` (및 필요시 `get`, `api`) 함수를 인자로 받습니다.
+    *   함수 본문에서는 `...initialState`를 포함하고, 정의된 Actions 타입에 맞는 액션 함수들을 구현합니다.
+    *   `immer` 미들웨어 사용 시, `set` 함수 내에서 상태를 직접 변경(mutate)할 수 있습니다.
+
+6.  **Export**:
+    *   생성된 스토어 인스턴스를 export 합니다. (예: `export const MyStore = create...`)
+    *   React 컴포넌트에서 사용하기 위한 커스텀 훅을 export 합니다. 이 훅은 `zustand`의 `useStore`를 사용하여 스토어 인스턴스를 반환합니다. (예: `export const useMyStore = () => useStore(MyStore);`)
+
+**예시 (영속성 필요 시):**
+
+```typescript
+// service/lib/MyFeature/consts.ts
+export const MY_FEATURE_STORAGE_KEY = 'my-feature-storage';
+
+// service/lib/MyFeature/store.ts
+import { StoreService } from '@/service/lib/Store/adapter';
+import { MY_FEATURE_STORAGE_KEY } from './consts';
+import { useStore } from 'zustand';
+
+type MyFeatureState = { count: number };
+type MyFeatureActions = { increment: () => void };
+
+const initialState: MyFeatureState = { count: 0 };
+
+export const MyFeatureStore = StoreService.createPersistentStore<MyFeatureState & MyFeatureActions>(
+  MY_FEATURE_STORAGE_KEY,
+  (set) => ({
+    ...initialState,
+    increment: () => set((state) => ({ count: state.count + 1 })),
+  })
+);
+
+export const useMyFeatureStore = () => useStore(MyFeatureStore);
+```
+
+**예시 (영속성 불필요 시):**
+
+```typescript
+// service/lib/MyTemp/store.ts
+import { createStore } from 'zustand/vanilla';
+import { useStore } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
+
+type MyTempState = { isLoading: boolean };
+type MyTempActions = { setIsLoading: (loading: boolean) => void };
+
+const initialState: MyTempState = { isLoading: false };
+
+export const MyTempStore = createStore<MyTempState & MyTempActions>()(
+  immer((set) => ({
+    ...initialState,
+    setIsLoading: (loading) => set((state) => { state.isLoading = loading; }),
+  }))
+);
+
+export const useMyTempStore = () => useStore(MyTempStore);
+```
+```

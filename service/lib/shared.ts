@@ -18,10 +18,7 @@ export class InitializationSingleTon<T extends InitializationSingleTon<T>> {
   /**
    * 클래스의 싱글톤 인스턴스를 반환합니다.
    */
-  static getInstance<T extends InitializationSingleTon<T>, Q>(
-    this: new (params?: Q) => T,
-    params?: Q,
-  ): T {
+  static getInstance<T extends InitializationSingleTon<T>, Q>(this: new (params?: Q) => T, params?: Q): T {
     const className = this.name;
 
     if (!InitializationSingleTon.instances[className]) {
