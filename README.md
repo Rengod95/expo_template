@@ -36,6 +36,13 @@
   - icon/               # 아이콘 컴포넌트
 ```
 
+## 필수 학습
+
+- domain/sharedkernel.d.ts
+- service/initialize.ts
+- service/lib/shared.ts
+- service/lib/Store/HydrationManager.ts
+
 ## 시작하기
 
 ### 필수 조건
