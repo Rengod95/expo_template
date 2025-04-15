@@ -4,7 +4,6 @@
 
 import {create, createStore, useStore} from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {AUTH_STORAGE_KEYS} from '@service/inbound/Auth/consts';
 import {createJSONStorage, devtools, persist} from 'zustand/middleware';
 import {immer} from 'zustand/middleware/immer';
 
